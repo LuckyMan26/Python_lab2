@@ -80,8 +80,21 @@ class MusicStoreDB:
         self.conn.commit()
 
     def delete_artist(self, id):
-        self.cur.execute('''DELETE FROM Artist WHERE id=?''', (id,))
+        self.cur.execute('''
+                  SELECT id FROM albums WHERE artist_id = ?
+              ''', (id,))
+        albums_to_delete = self.cursor.fetchall()
+
+
+        for album_id in albums_to_delete:
+            self.delete_album(album_id[0])
+
+        # Delete the artist
+        self.cur.execute('''
+                  DELETE FROM artists WHERE id = ?
+              ''', (id,))
         self.conn.commit()
+        print("Artist and associated albums deleted successfully.")
 
     def delete_album(self, id):
         self.cur.execute('''DELETE FROM Album WHERE id=?''', (id,))
