@@ -1,32 +1,30 @@
-# This is a sample Python script.
-from musicstoredb import MusicStoreDB
-from utils import Album, Artist, Genre
+import socket
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-   db_file = 'musicstore.db'
-   music_store_db = MusicStoreDB(db_file)
+# Client configuration
+HOST = '127.0.0.1'  # The server's hostname or IP address
+PORT = 65432        # The port used by the server
 
-   artist = Artist("Eminem", 1, [], Genre.RAP)
-   music_store_db.add_artist(artist)
+# Function to send requests to the server and receive responses
+def send_request(request):
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        # Connect to the server
+        s.connect((HOST, PORT))
+        # Send the request to the server
+        s.sendall(request.encode())
+        # Receive response from the server
+        response = s.recv(1024)
+        return response.decode()
 
-   album = Album("The Marshall Mathers LP", 1, 18)
-   album.artist = artist
-   music_store_db.add_album(album)
+# Test the server by sending some sample requests
+if __name__ == "__main__":
+    # Example requests
+    requests = [
+        "ADD_ARTIST Eminem RAP",
+        "ADD_ALBUM 'The Marshall Mathers LP' 1 18 1",
+        # Add more requests as needed
+    ]
 
-   retrieved_artist = music_store_db.get_artist_by_id(1)
-   retrieved_album = music_store_db.get_album_by_id(1)
-
-
-   music_store_db.update_artist(1, "Eminem Updated")
-   music_store_db.update_album(1, "The Marshall Mathers LP Updated", 20)
-   music_store_db.get_artist_by_id(1)
-   music_store_db.get_album_by_id(1)
-
-
-   music_store_db.delete_artist(1)
-   music_store_db.delete_album(1)
-
-   music_store_db.close()
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    # Send each request and print the response
+    for request in requests:
+        response = send_request(request)
+        print(f"Request: {request}\nResponse: {response}")
