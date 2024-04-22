@@ -20,7 +20,7 @@ if __name__ == "__main__":
     # Example requests
     requests = [
         "ADD_ARTIST Eminem RAP",
-        "ADD_ALBUM 'The Marshall Mathers LP' 1 18 1",
+        "ADD_ALBUM 'LP' 1 18 1",
         # Add more requests as needed
     ]
 

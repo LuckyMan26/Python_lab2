@@ -30,11 +30,13 @@ class MusicStoreDB:
         self.conn.commit()
 
     def add_album(self, album):
+        print(album.name, album.numberOfSongs, album.artist.id)
         self.cur.execute('''INSERT INTO Album (name, numberOfSongs, artist_id) VALUES (?, ?, ?)''',
                          (album.name, album.numberOfSongs, album.artist.id))
         self.conn.commit()
 
     def get_artist_by_id(self, artist_id):
+        art = None
         self.cur.execute('''
               SELECT * FROM Artist WHERE id = ?
           ''', (artist_id,))
@@ -55,10 +57,14 @@ class MusicStoreDB:
                 for album in albums:
                     id, name, number_of_songs, artist_id = album
                     print(f"  - {name} (ID: {id}, Number of Songs: {number_of_songs})")
+
             else:
                 print("This artist has no albums.")
+            art = Artist(name, artist_id, albums, genre)
         else:
             print("Artist not found.")
+
+        return art
 
     def get_album_by_id(self, album_id):
         self.cur.execute('''SELECT * FROM Album WHERE id=?''', (album_id,))

@@ -22,12 +22,15 @@ def process_request(request):
         music_store_db.add_artist(artist)
         return "Artist added successfully.".encode()
     elif command == "ADD_ALBUM":
+        print(args)
         # Example: ADD_ALBUM "The Marshall Mathers LP" 1 18 1
         name, id, numberOfSongs, artist_id = args
         album = Album(name, int(id), int(numberOfSongs))
         # Retrieve the artist from the database based on the artist_id
         artist = music_store_db.get_artist_by_id(int(artist_id))
+
         album.artist = artist
+
         music_store_db.add_album(album)
         return "Album added successfully.".encode()
     # Add more elif clauses for other types of requests (update, delete, retrieve, etc.)
